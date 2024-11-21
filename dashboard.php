@@ -1,3 +1,17 @@
+<?php
+
+include 'koneksi.php';
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
+
+$sql = "SELECT * FROM barang";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +34,7 @@
 
     <main class="main-content">
       <div class="user-info">
-        <span class="username">Dimas Asli Jawa</span>
+        <span class="username">Dimas</span>
         <div class="user-avatar"></div>
       </div>
 
@@ -46,15 +60,27 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Barang A</td>
-              <td>100</td>
-              <td>90</td>
-              <td>85</td>
-              <td>5</td>
-            </tr>
-          </tbody>
+                        <?php
+                        if ($result->num_rows > 0) {
+                            $no = 1;
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>
+                                    <td>{$no}</td>
+                                    <td>{$row['nama_barang']}</td>
+                                    <td>{$row['pengadaan']}</td>
+                                    <td>{$row['stok']}</td>
+                                    <td>{$row['baik']}</td>
+                                    <td>{$row['rusak']}</td>
+                                </tr>";
+                                $no++;
+                            }
+                        } else {
+                            echo "<tr>
+                                    <td colspan='6'>Tidak ada data</td>
+                                  </tr>";
+                        }
+                        ?>
+                    </tbody>
         </table>
       </div>
       <footer>
